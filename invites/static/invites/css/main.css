@@ -996,3 +996,123 @@ body.is-hype-mode .scene-poster-layer {
         flex-direction: column;
     }
 }
+
+/* ==========================================================================
+   MOBILE & TABLET INTRO / SPLASH SCREEN FIXES (<= 768px & <= 480px)
+   Leaves desktop screens (> 768px) 100% untouched.
+   ========================================================================== */
+@media (max-width: 768px) {
+    .movie-flash-theme,
+    .intro-overlay {
+        overflow: hidden !important;
+        width: 100vw;
+        max-width: 100vw;
+    }
+
+    /* Pinned pill Skip button in top-right corner */
+    .intro-skip-btn {
+        position: absolute !important;
+        top: max(16px, env(safe-area-inset-top, 16px)) !important;
+        right: max(16px, env(safe-area-inset-right, 16px)) !important;
+        z-index: 50 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 6px 14px !important;
+        font-size: 0.72rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.08em !important;
+        text-transform: uppercase !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        background: rgba(18, 9, 36, 0.75) !important;
+        border: 1px solid rgba(255, 197, 90, 0.5) !important;
+        border-radius: 9999px !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 138, 31, 0.25) !important;
+        cursor: pointer !important;
+        line-height: 1 !important;
+        text-decoration: none !important;
+    }
+
+    /* Proper z-index order: lightning (1) < text (5) < skip button (50) */
+    .intro-lightning-canvas {
+        z-index: 1 !important;
+    }
+
+    .flash-logo-hero {
+        position: relative !important;
+        z-index: 5 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        padding: 0 16px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* Balanced college badge line */
+    .flash-dept-badge {
+        font-size: clamp(0.68rem, 2.6vw, 0.92rem) !important;
+        letter-spacing: clamp(0.08em, 1.4vw, 0.16em) !important;
+        text-wrap: balance !important;
+        max-width: 90vw !important;
+        margin: 0 auto 0.65rem auto !important;
+        line-height: 1.35 !important;
+    }
+
+    /* NEXORA title responsive fitting */
+    .flash-cinematic-title {
+        font-size: clamp(2.8rem, 11vw, 4.8rem) !important;
+        letter-spacing: clamp(0.06em, 2vw, 0.14em) !important;
+        white-space: nowrap !important;
+        line-height: 1.05 !important;
+        margin: 0 !important;
+        padding: 0 8px !important;
+    }
+
+    /* Balanced subtext */
+    .flash-subtext {
+        font-size: clamp(0.85rem, 3.2vw, 1.3rem) !important;
+        letter-spacing: clamp(0.14em, 2vw, 0.28em) !important;
+        margin-top: 0.85rem !important;
+        white-space: nowrap !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* College line fine-tuned for small phones */
+    .flash-dept-badge {
+        font-size: clamp(0.58rem, 2.7vw, 0.75rem) !important;
+        letter-spacing: clamp(0.05em, 1vw, 0.1em) !important;
+        max-width: 92vw !important;
+        margin-bottom: 0.55rem !important;
+        line-height: 1.4 !important;
+    }
+
+    /* NEXORA title fits with at least 16px side padding on 360px-480px screens */
+    .flash-cinematic-title {
+        font-size: clamp(2.05rem, 9.4vw, 2.95rem) !important;
+        letter-spacing: clamp(0.04em, 1.2vw, 0.08em) !important;
+        padding: 0 16px !important;
+    }
+
+    /* Zoom peak scale clamp to prevent overflow during Stage 2 */
+    .flash-stage-2 .flash-logo-hero {
+        transform: scale(1.08) !important;
+    }
+
+    .flash-subtext {
+        font-size: clamp(0.68rem, 3.2vw, 0.88rem) !important;
+        letter-spacing: clamp(0.12em, 1.8vw, 0.2em) !important;
+        margin-top: 0.7rem !important;
+    }
+
+    .intro-skip-btn {
+        padding: 5px 12px !important;
+        font-size: 0.68rem !important;
+    }
+}
+
