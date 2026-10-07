@@ -97,6 +97,7 @@ STATICFILES_DIRS = [
 ]
 
 # WhiteNoise Configuration
+WHITENOISE_USE_FINDERS = True
 WHITENOISE_MANIFEST_STRICT = False
 STORAGES = {
     "default": {
