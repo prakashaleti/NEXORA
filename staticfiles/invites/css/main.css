@@ -1055,29 +1055,29 @@ body.is-hype-mode .scene-poster-layer {
 
     /* Balanced college badge line */
     .flash-dept-badge {
-        font-size: clamp(0.68rem, 2.6vw, 0.92rem) !important;
-        letter-spacing: clamp(0.08em, 1.4vw, 0.16em) !important;
+        font-size: clamp(0.78rem, 2.8vw, 1.05rem) !important;
+        letter-spacing: clamp(0.1em, 1.6vw, 0.2em) !important;
         text-wrap: balance !important;
         max-width: 90vw !important;
-        margin: 0 auto 0.65rem auto !important;
+        margin: 0 auto 0.75rem auto !important;
         line-height: 1.35 !important;
     }
 
-    /* NEXORA title responsive fitting */
+    /* NEXORA title responsive fitting - larger screen fill */
     .flash-cinematic-title {
-        font-size: clamp(2.8rem, 11vw, 4.8rem) !important;
-        letter-spacing: clamp(0.06em, 2vw, 0.14em) !important;
+        font-size: clamp(3.6rem, 13.5vw, 5.8rem) !important;
+        letter-spacing: clamp(0.08em, 2vw, 0.16em) !important;
         white-space: nowrap !important;
-        line-height: 1.05 !important;
+        line-height: 1.02 !important;
         margin: 0 !important;
         padding: 0 8px !important;
     }
 
     /* Balanced subtext */
     .flash-subtext {
-        font-size: clamp(0.85rem, 3.2vw, 1.3rem) !important;
-        letter-spacing: clamp(0.14em, 2vw, 0.28em) !important;
-        margin-top: 0.85rem !important;
+        font-size: clamp(1.05rem, 3.6vw, 1.55rem) !important;
+        letter-spacing: clamp(0.18em, 2.4vw, 0.35em) !important;
+        margin-top: 1rem !important;
         white-space: nowrap !important;
     }
 }
@@ -1085,18 +1085,18 @@ body.is-hype-mode .scene-poster-layer {
 @media (max-width: 480px) {
     /* College line fine-tuned for small phones */
     .flash-dept-badge {
-        font-size: clamp(0.58rem, 2.7vw, 0.75rem) !important;
-        letter-spacing: clamp(0.05em, 1vw, 0.1em) !important;
-        max-width: 92vw !important;
-        margin-bottom: 0.55rem !important;
-        line-height: 1.4 !important;
+        font-size: clamp(0.72rem, 3.2vw, 0.88rem) !important;
+        letter-spacing: clamp(0.06em, 1.4vw, 0.12em) !important;
+        max-width: 94vw !important;
+        margin-bottom: 0.65rem !important;
+        line-height: 1.35 !important;
     }
 
-    /* NEXORA title fits with at least 16px side padding on 360px-480px screens */
+    /* NEXORA title fills the screen width boldly with exact safe boundaries */
     .flash-cinematic-title {
-        font-size: clamp(2.05rem, 9.4vw, 2.95rem) !important;
-        letter-spacing: clamp(0.04em, 1.2vw, 0.08em) !important;
-        padding: 0 16px !important;
+        font-size: clamp(2.85rem, 13vw, 3.9rem) !important;
+        letter-spacing: clamp(0.06em, 1.5vw, 0.1em) !important;
+        padding: 0 8px !important;
     }
 
     /* Zoom peak scale clamp to prevent overflow during Stage 2 */
@@ -1105,14 +1105,14 @@ body.is-hype-mode .scene-poster-layer {
     }
 
     .flash-subtext {
-        font-size: clamp(0.68rem, 3.2vw, 0.88rem) !important;
-        letter-spacing: clamp(0.12em, 1.8vw, 0.2em) !important;
-        margin-top: 0.7rem !important;
+        font-size: clamp(0.85rem, 3.8vw, 1.15rem) !important;
+        letter-spacing: clamp(0.16em, 2vw, 0.28em) !important;
+        margin-top: 0.85rem !important;
     }
 
     .intro-skip-btn {
-        padding: 5px 12px !important;
-        font-size: 0.68rem !important;
+        padding: 6px 13px !important;
+        font-size: 0.7rem !important;
     }
 }
 
