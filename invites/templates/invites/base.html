@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>{% block title %}{{ EVENT.NAME }} | {{ EVENT.COLLEGE }}{% endblock %}</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Official Invitation for NEXORA – Freshers Party 2K26 at Sri Vasavi Engineering College (Autonomous), Pedatadepalli, Dept of CSE & CST (IT). Scan, enter roll number, and celebrate!">
+    <meta name="keywords" content="NEXORA, Freshers Party 2026, Sri Vasavi Engineering College, SVEC, CSE, CST (IT), Freshers 2K26">
+    <meta name="author" content="Dept of CSE & CST (IT), SVEC">
+    <meta name="theme-color" content="#090412">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ EVENT.NAME }} – Official Invitation">
+    <meta property="og:description" content="{{ EVENT.TAGLINE_1 }} • {{ EVENT.DATE }} at {{ EVENT.VENUE }}">
+    <meta property="og:image" content="{% static 'invites/img/poster_bg.webp' %}">
+
+    <!-- Preload Critical Poster Image -->
+    <link rel="preload" as="image" href="{% static 'invites/img/poster_bg.webp' %}" type="image/webp">
+
+    <!-- Google Fonts (Cinzel, Outfit, Poppins) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Master CSS -->
+    <link rel="stylesheet" href="{% static 'invites/css/main.css' %}">
+</head>
+<body>
+    <!-- ====================================================================
+         PERMANENT FIXED LAYERED ANIMATED SCENE
+         Never scrolls, 100dvh safe, fixed across all pages
+         ==================================================================== -->
+    <div id="fixed-stage-scene" class="fixed-stage-scene" aria-hidden="true">
+        <!-- Layer A: Base Poster Image with slow breathing loop -->
+        <div class="scene-poster-layer">
+            {% block background_image %}
+            <img src="{% static 'invites/img/poster_bg.webp' %}" alt="NEXORA Stage Backdrop" width="1672" height="941" loading="eager">
+            {% endblock %}
+        </div>
+
+        <!-- Layer B: Night Sky & Stage Light Beams Canvas -->
+        <canvas id="sky-lights-canvas"></canvas>
+
+        <!-- Layer C: Floating Glowing Embers Canvas -->
+        <canvas id="embers-canvas"></canvas>
+
+        <!-- Layer D: Dancing Crowd Silhouettes & Procedural Dancers -->
+        <div id="crowd-scene-container">
+            <div class="crowd-layer crowd-layer-back" style="background-image: url('{% static "invites/img/crowd_back.webp" %}');"></div>
+            <div class="crowd-layer crowd-layer-mid" style="background-image: url('{% static "invites/img/crowd_mid.webp" %}');"></div>
+            <div class="procedural-dancers-row"></div>
+            <div class="crowd-layer crowd-layer-front" style="background-image: url('{% static "invites/img/crowd_front.webp" %}');"></div>
+        </div>
+
+        <!-- Layer F: Foreground Vignette for text contrast -->
+        <div class="scene-vignette-layer"></div>
+    </div>
+
+    <!-- Hype Mode Indicator -->
+    <div id="hype-mode-indicator" class="hype-mode-indicator" aria-live="polite">
+        🔥 HYPE MODE ACTIVATED!
+    </div>
+
+    <!-- Toast Notification for Share / Copy -->
+    <div id="nexora-toast" class="nexora-toast" role="status" aria-live="polite"></div>
+
+    <!-- ====================================================================
+         SCROLLABLE CONTENT LAYER
+         ==================================================================== -->
+    <div class="app-viewport">
+        <!-- Header -->
+        <header class="site-header">
+            <div class="college-badge">
+                <span class="dot"></span>
+                <span>{{ EVENT.COLLEGE }}</span>
+            </div>
+            <div class="dept-title">{{ EVENT.DEPARTMENTS }}</div>
+        </header>
+
+        <!-- Main Page Content -->
+        <main id="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <p>{{ EVENT.BANNER_TEXT }} • {{ EVENT.TAGLINE_2 }}</p>
+            <p style="margin-top: 0.25rem;">© 2026 {{ EVENT.COLLEGE }} | Dept of CSE & CST (IT)</p>
+        </footer>
+    </div>
+
+    <!-- ====================================================================
+         SCRIPTS: Pinned CDN Libraries + Native ES Modules with Graceful Fallbacks
+         ==================================================================== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- App Module -->
+    <script type="module" src="{% static 'invites/js/app.js' %}"></script>
+</body>
+</html>

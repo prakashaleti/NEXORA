@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Students Collection
+    match /students/{rollNo} {
+      // Public can lookup a single student document by roll number
+      allow get: if true;
+
+      // Only authenticated admins can list (query all), create new, or delete students
+      allow list, create, delete: if request.auth != null;
+
+      // Updates:
+      // Admins have full update rights.
+      // Unauthenticated students can ONLY:
+      // - update invitationGenerated and generatedAt on first pass generation, OR
+      // - increment downloadCount by exactly 1 and set lastDownloadAt, provided downloadCount < downloadAllowed
+      allow update: if request.auth != null || (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['invitationGenerated', 'generatedAt'])
+      ) || (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['downloadCount', 'lastDownloadAt']) &&
+        resource.data.get('downloadCount', 0) < resource.data.get('downloadAllowed', 1) &&
+        request.resource.data.downloadCount == resource.data.get('downloadCount', 0) + 1 &&
+        request.resource.data.get('downloadAllowed', 1) == resource.data.get('downloadAllowed', 1)
+      );
+    }
+
+    // 2. Download Requests Collection
+    match /downloadRequests/{reqId} {
+      // Authenticated admins have full read/write/list permissions
+      allow read, write: if request.auth != null;
+
+      // Public student can get their own request
+      allow get: if true;
+
+      // Public student can create or re-request only with status 'pending' matching their roll number
+      allow create, update: if request.auth == null &&
+        request.resource.data.status == 'pending' &&
+        request.resource.data.rollNo == reqId;
+    }
+  }
+}

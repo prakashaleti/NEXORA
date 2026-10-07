@@ -1,0 +1,139 @@
+{% extends "invites/base.html" %}
+{% load static %}
+
+{% block title %}Freshers Party 2K26 – NEXORA Invitation | {{ EVENT.COLLEGE }}{% endblock %}
+
+{% block content %}
+<!-- ====================================================================
+     NEXORA FRESHERS PARTY 2K26 – INVITATION POSTER PAGE
+     ==================================================================== -->
+<section class="poster-invitation-section" aria-labelledby="poster-heading">
+    <h1 id="poster-heading" class="poster-heading visually-hidden">Freshers Party 2K26 – Official Invitation</h1>
+
+    <div class="poster-card-wrapper">
+        <img
+            src="{% static 'invites/img/Freshers_Party_Invitation_edited.png' %}"
+            alt="Freshers Party 2K26 NEXORA invitation - Sri Vasavi Engineering College"
+            class="poster-invitation-img"
+            width="1024"
+            height="1536"
+            loading="eager"
+            decoding="async"
+        >
+    </div>
+
+    <div class="poster-actions">
+        <a
+            href="{% static 'invites/img/Freshers_Party_Invitation_edited.png' %}"
+            download="Freshers_Party_Invitation_NEXORA_2K26.png"
+            class="btn-download-poster"
+            aria-label="Download the Freshers Party 2K26 NEXORA invitation image"
+        >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download Invitation
+        </a>
+    </div>
+</section>
+
+<style>
+/* ── Poster Invitation Page ─────────────────────────────────────────── */
+.poster-invitation-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 1rem 3rem;
+    min-height: 100%;
+    gap: 1.5rem;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.poster-card-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.poster-invitation-img {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow:
+        0 0 0 2px rgba(212, 175, 55, 0.35),
+        0 8px 40px rgba(0, 0, 0, 0.65),
+        0 0 60px rgba(212, 175, 55, 0.12);
+}
+
+/* ── Download Button ────────────────────────────────────────────────── */
+.poster-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-download-poster {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.75rem;
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    color: #0a0010;
+    font-family: 'Cinzel', 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 18px rgba(212, 175, 55, 0.35);
+}
+
+.btn-download-poster:hover,
+.btn-download-poster:focus-visible {
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(212, 175, 55, 0.55);
+    outline: 2px solid #d4af37;
+    outline-offset: 3px;
+}
+
+.btn-download-poster:active {
+    transform: translateY(0);
+    filter: brightness(0.95);
+}
+
+/* ── Responsive Tweaks ──────────────────────────────────────────────── */
+@media (min-width: 600px) {
+    .poster-invitation-section {
+        padding: 2.5rem 1.5rem 4rem;
+    }
+}
+
+@media (min-width: 900px) {
+    .poster-invitation-section {
+        padding: 3rem 2rem 5rem;
+    }
+}
+</style>
+{% endblock %}

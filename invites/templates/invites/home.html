@@ -1,0 +1,225 @@
+{% extends "invites/base.html" %}
+{% load static %}
+
+{% block title %}{{ EVENT.NAME }} | Official Invitation Portal{% endblock %}
+
+{% block content %}
+<!-- ====================================================================
+     BLOCKBUSTER "THE FLASH" CINEMATIC MOVIE INTRO OVERLAY
+     ==================================================================== -->
+<div id="intro-cinematic-overlay" class="intro-overlay movie-flash-theme" role="dialog" aria-modal="true" aria-label="Cinematic Movie Intro">
+    <canvas id="intro-lightning-canvas" class="intro-lightning-canvas"></canvas>
+
+    <button type="button" id="intro-skip-btn" class="intro-skip-btn" aria-label="Skip introduction">
+        SKIP INTRO ➔
+    </button>
+
+    <div class="intro-logo-container flash-logo-hero">
+        <div class="shockwave-ring"></div>
+        <div class="shockwave-ring ring-delayed"></div>
+        <div class="speed-force-aura"></div>
+
+        <div class="flash-dept-badge">SRI VASAVI ENGINEERING COLLEGE • CSE & CST (IT)</div>
+        <h1 class="intro-title flash-cinematic-title">NEXORA</h1>
+        <div class="intro-lens-flare flash-beam-flare"></div>
+        <div class="intro-subtext flash-subtext">FRESHERS PARTY 2K26</div>
+    </div>
+
+    <div class="intro-flash-layer"></div>
+</div>
+
+<div id="home-content-container" class="home-content-container desktop-grand-view">
+    <!-- Desktop Split Hero Layout: Left Branding, Right Glassmorphic Console -->
+    <div class="desktop-hero-layout">
+        <!-- Hero Left: 3D Emblem & Experience Highlights -->
+        <div class="desktop-hero-left">
+            <section class="logo-interactive-section" id="interactive-logo-hero" aria-label="Interactive NEXORA 3D Logo">
+                <div id="logo-3d-wrapper" class="logo-3d-wrapper desktop-3d-height">
+                    <canvas id="three-logo-canvas"></canvas>
+                    <div id="logo-fallback-wrapper" class="logo-fallback-wrapper">
+                        <div class="logo-2d-title">NEXORA</div>
+                        <div class="logo-2d-sub">FRESHERS 2K26</div>
+                    </div>
+                </div>
+                <div class="logo-tagline">{{ EVENT.TAGLINE_1 }}</div>
+                <div class="logo-hint">⚡ Click NEXORA for 3s Speed-Force Hype Mode ⚡</div>
+            </section>
+
+            <!-- Event Highlights Ribbon (Desktop) -->
+            <div class="desktop-highlights-ribbon">
+                <div class="highlight-item">
+                    <span class="hl-icon">📅</span>
+                    <div>
+                        <div class="hl-label">Date</div>
+                        <div class="hl-val">{{ EVENT.DATE }}</div>
+                    </div>
+                </div>
+                <div class="highlight-item">
+                    <span class="hl-icon">⏰</span>
+                    <div>
+                        <div class="hl-label">Time</div>
+                        <div class="hl-val">{{ EVENT.TIME }}</div>
+                    </div>
+                </div>
+                <div class="highlight-item">
+                    <span class="hl-icon">📍</span>
+                    <div>
+                        <div class="hl-label">Venue</div>
+                        <div class="hl-val">{{ EVENT.VENUE }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Right: Glassmorphic Invitation Access Console -->
+        <div class="desktop-hero-right">
+            <section class="glass-panel home-form-container desktop-form-panel" aria-labelledby="form-heading">
+                <div class="console-corner top-left"></div>
+                <div class="console-corner top-right"></div>
+                <div class="console-corner bottom-left"></div>
+                <div class="console-corner bottom-right"></div>
+
+                <div class="badge-freshers-pill">OFFICIAL JUNIOR PASS GENERATOR</div>
+                <h2 id="form-heading" class="form-heading">Access Your Invitation</h2>
+                <p class="form-subtitle">Enter your college roll number to unlock your personalized invitation pass.</p>
+
+                <!-- Dynamic Error Alert Box -->
+                <div id="roll-error-alert" class="alert-box alert-error" style="display: none; margin-bottom: 1.2rem; padding: 0.85rem 1.1rem; border-radius: 8px; font-size: 0.9rem; background: rgba(255, 71, 87, 0.18); border: 1.5px solid #FF4757; color: #FFA4B0; text-align: left;" role="alert">
+                </div>
+
+                <form action="{% url 'invites:invite' %}" method="GET" class="roll-form" id="roll-search-form">
+                    <div class="input-group">
+                        <label for="roll-input" class="input-label">Student Roll Number</label>
+                        <div class="input-wrapper-glow">
+                            <input
+                                type="text"
+                                id="roll-input"
+                                name="roll"
+                                class="roll-input desktop-input"
+                                placeholder="Enter your Roll Number (e.g. 26A81A0501)"
+                                maxlength="20"
+                                required
+                                autofocus
+                                autocomplete="off"
+                                autocapitalize="characters"
+                                spellcheck="false"
+                                aria-required="true"
+                            >
+                            <span class="input-icon-spark">⚡</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btn-submit-roll" class="btn-primary desktop-btn-submit">
+                        <span id="btn-submit-text">GENERATE INVITATION PASS</span>
+                        <svg id="btn-submit-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 1.8rem; border-top: 1px dashed rgba(255, 255, 255, 0.12); padding-top: 1rem;">
+                    <a href="/admin.html" style="color: var(--text-dim); font-size: 0.78rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; transition: color 0.2s;">
+                        <span>🔒</span>
+                        <span>Coordinator Admin Portal</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase Modular SDK Student Lookup Integration -->
+<script type="module">
+    import { db, doc, getDoc, updateDoc, serverTimestamp } from "{% static 'invites/js/firebase.js' %}";
+
+    const form = document.getElementById('roll-search-form');
+    const rollInput = document.getElementById('roll-input');
+    const submitBtn = document.getElementById('btn-submit-roll');
+    const btnText = document.getElementById('btn-submit-text');
+    const btnIcon = document.getElementById('btn-submit-icon');
+    const errorBox = document.getElementById('roll-error-alert');
+
+    // Auto-clear error when user types
+    rollInput.addEventListener('input', () => {
+        if (errorBox) {
+            errorBox.style.display = 'none';
+            errorBox.textContent = '';
+        }
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const rawRoll = rollInput.value;
+        const roll = (rawRoll || '').trim().toUpperCase();
+
+        if (!roll) {
+            rollInput.focus();
+            return;
+        }
+
+        // Hide prior error
+        if (errorBox) {
+            errorBox.style.display = 'none';
+            errorBox.textContent = '';
+        }
+
+        // Show loading state
+        submitBtn.disabled = true;
+        btnText.textContent = 'CHECKING REGISTRATION...';
+        if (btnIcon) btnIcon.style.display = 'none';
+
+        try {
+            // Firestore lookup by document ID (roll number)
+            const studentRef = doc(db, "students", roll);
+            const studentSnap = await getDoc(studentRef);
+
+            if (!studentSnap.exists()) {
+                // Not found error requirement: "Roll number not registered. Contact your coordinator."
+                submitBtn.disabled = false;
+                btnText.textContent = 'GENERATE INVITATION PASS';
+                if (btnIcon) btnIcon.style.display = 'inline-block';
+
+                if (errorBox) {
+                    errorBox.textContent = 'Roll number not registered. Contact your coordinator.';
+                    errorBox.style.display = 'block';
+                }
+                rollInput.focus();
+                return;
+            }
+
+            // Student found!
+            const studentData = studentSnap.data();
+
+            // Update invitationGenerated and generatedAt in Firestore
+            try {
+                await updateDoc(studentRef, {
+                    invitationGenerated: true,
+                    generatedAt: serverTimestamp()
+                });
+            } catch (updateErr) {
+                console.warn("Notice: generatedAt timestamp update skipped or blocked by rule:", updateErr);
+            }
+
+            // Direct student to their personalized invitation pass
+            const name = studentData.name || '';
+            const dept = studentData.department || '';
+            const targetUrl = "{% url 'invites:invite' %}?roll=" + encodeURIComponent(roll) + 
+                              "&name=" + encodeURIComponent(name) + 
+                              "&dept=" + encodeURIComponent(dept);
+            window.location.href = targetUrl;
+
+        } catch (err) {
+            console.error("Firestore lookup error:", err);
+            submitBtn.disabled = false;
+            btnText.textContent = 'GENERATE INVITATION PASS';
+            if (btnIcon) btnIcon.style.display = 'inline-block';
+
+            if (errorBox) {
+                errorBox.textContent = 'Unable to connect to registration server. Please check your network and try again.';
+                errorBox.style.display = 'block';
+            }
+        }
+    });
+</script>
+{% endblock %}

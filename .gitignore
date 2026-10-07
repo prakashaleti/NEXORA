@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Staticfiles collected output
+staticfiles/
+
+# Secrets & Firebase credentials (NEVER COMMIT)
+.env
+serviceAccountKey*.json
+*serviceAccountKey*.json
+*.pem
+credentials.json
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Root scratch / debug image files
+/*.png
+/*.jpg
+
+# Static scratch / debug images
+invites/static/invites/img/test_*
+invites/static/invites/img/crop_*
+invites/static/invites/img/check_*
+invites/static/invites/img/zoom_*
+invites/static/invites/img/patch_*
+invites/static/invites/img/date_venue_exact.png
+invites/static/invites/img/poster_crop_check.jpg
+invites/static/invites/img/poster_cleaned_check.png
+invites/static/invites/img/box_crop.jpg
+
+
+

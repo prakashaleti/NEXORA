@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA 2K26 – Admin Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #070310;
+            --bg-panel: rgba(18, 9, 36, 0.85);
+            --gold-accent: #FFC55A;
+            --orange-bright: #FF8A1F;
+            --text-main: #FFFFFF;
+            --text-dim: rgba(255, 255, 255, 0.65);
+            --border-glow: rgba(255, 138, 31, 0.35);
+            --danger: #FF4757;
+            --success: #2ED573;
+            --warning: #FFA502;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 138, 31, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 40%),
+                linear-gradient(180deg, #070310 0%, #0d061c 100%);
+            background-attachment: fixed;
+            padding: 1.25rem;
+        }
+
+        /* Top Nav */
+        .admin-nav {
+            max-width: 1300px;
+            margin: 0 auto 1.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 1.4rem;
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .admin-brand h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFF, var(--gold-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-badge {
+            background: rgba(255, 138, 31, 0.2);
+            color: var(--gold-accent);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(255, 138, 31, 0.4);
+        }
+
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-email-text {
+            font-size: 0.88rem;
+            color: var(--text-dim);
+        }
+
+        .btn-signout {
+            background: rgba(255, 71, 87, 0.15);
+            border: 1px solid var(--danger);
+            color: #FF6B81;
+            padding: 0.4rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-signout:hover {
+            background: var(--danger);
+            color: #FFF;
+        }
+
+        /* Main Container */
+        .admin-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* Login Card */
+        .login-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+        }
+
+        .login-card {
+            background: var(--bg-panel);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 2.5rem 2.2rem;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 138, 31, 0.15);
+            text-align: center;
+        }
+
+        .login-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.4rem;
+            color: var(--gold-accent);
+        }
+
+        .login-desc {
+            font-size: 0.88rem;
+            color: var(--text-dim);
+            margin-bottom: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--gold-accent);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.05em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: rgba(10, 4, 20, 0.8);
+            border: 1px solid rgba(255, 138, 31, 0.35);
+            border-radius: 8px;
+            color: #FFF;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 10px rgba(255, 197, 90, 0.25);
+        }
+
+        .btn-primary-action {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(135deg, var(--gold-accent), var(--orange-bright));
+            border: none;
+            border-radius: 8px;
+            color: #070310;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: filter 0.2s, transform 0.15s;
+        }
+
+        .btn-primary-action:hover {
+            filter: brightness(1.15);
+            transform: translateY(-1px);
+        }
+
+        .alert-box {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.86rem;
+            margin-bottom: 1.2rem;
+            display: none;
+        }
+
+        .alert-error {
+            background: rgba(255, 71, 87, 0.18);
+            border: 1px solid var(--danger);
+            color: #FFA4B0;
+        }
+
+        .alert-success {
+            background: rgba(46, 213, 115, 0.18);
+            border: 1px solid var(--success);
+            color: #A3F7BF;
+        }
+
+        /* Stats Row */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-panel);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 1.2rem 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            font-size: 2.2rem;
+        }
+
+        .stat-val {
+            font-size: 1.9rem;
+            font-weight: 800;
+            font-family: 'Cinzel', serif;
+            color: var(--gold-accent);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 0.06em;
+            font-weight: 600;
+        }
+
+        /* Tabs Navigation */
+        .admin-tabs-bar {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid var(--border-glow);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.75rem 1.4rem;
+            border-radius: 8px;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #FFF;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 138, 31, 0.18);
+            color: var(--gold-accent);
+            border: 1px solid var(--border-glow);
+        }
+
+        .tab-badge {
+            background: var(--danger);
+            color: #FFF;
+            font-size: 0.72rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 800;
+        }
+
+        /* Action Toolbar */
+        .toolbar-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .toolbar-search {
+            flex: 1;
+            min-width: 260px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.4rem;
+            background: rgba(10, 4, 20, 0.8);
+            border: 1px solid rgba(255, 138, 31, 0.3);
+            border-radius: 8px;
+            color: #FFF;
+            font-size: 0.92rem;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+
+        .toolbar-buttons {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-tool {
+            padding: 0.7rem 1.1rem;
+            border-radius: 8px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            border: 1px solid rgba(255, 197, 90, 0.35);
+            background: rgba(255, 138, 31, 0.12);
+            color: var(--gold-accent);
+            transition: all 0.2s;
+        }
+
+        .btn-tool:hover {
+            background: rgba(255, 138, 31, 0.25);
+            border-color: var(--gold-accent);
+            transform: translateY(-1px);
+        }
+
+        .btn-tool-primary {
+            background: linear-gradient(135deg, var(--gold-accent), var(--orange-bright));
+            color: #070310;
+            font-weight: 700;
+            border: none;
+        }
+
+        /* Table View */
+        .table-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: rgba(255, 138, 31, 0.1);
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        th {
+            padding: 0.95rem 1.1rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.82rem;
+            letter-spacing: 0.06em;
+            color: var(--gold-accent);
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 0.9rem 1.1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: rgba(255, 138, 31, 0.04);
+        }
+
+        .roll-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--gold-accent);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-generated {
+            background: rgba(46, 213, 115, 0.15);
+            border: 1px solid var(--success);
+            color: #A3F7BF;
+        }
+
+        .status-pending {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-dim);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+        }
+
+        .btn-table {
+            padding: 0.35rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: rgba(255, 197, 90, 0.15);
+            color: var(--gold-accent);
+            border-color: rgba(255, 197, 90, 0.4);
+        }
+
+        .btn-edit:hover {
+            background: var(--gold-accent);
+            color: #070310;
+        }
+
+        .btn-del {
+            background: rgba(255, 71, 87, 0.15);
+            color: #FF6B81;
+            border-color: rgba(255, 71, 87, 0.4);
+        }
+
+        .btn-del:hover {
+            background: var(--danger);
+            color: #FFF;
+        }
+
+        .btn-approve {
+            background: rgba(46, 213, 115, 0.2);
+            color: #2ED573;
+            border: 1px solid #2ED573;
+        }
+
+        .btn-approve:hover {
+            background: #2ED573;
+            color: #070310;
+        }
+
+        .btn-deny {
+            background: rgba(255, 71, 87, 0.2);
+            color: #FF4757;
+            border: 1px solid #FF4757;
+        }
+
+        .btn-deny:hover {
+            background: #FF4757;
+            color: #FFF;
+        }
+
+        .empty-placeholder {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-dim);
+        }
+
+        /* Modal Dialogs */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-card {
+            background: #110724;
+            border: 1.5px solid var(--border-glow);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 520px;
+            padding: 2rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 138, 31, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.4rem;
+        }
+
+        .modal-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.25rem;
+            color: var(--gold-accent);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #FFF;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-modal-cancel {
+            padding: 0.65rem 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #FFF;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-modal-save {
+            padding: 0.65rem 1.4rem;
+            background: linear-gradient(135deg, var(--gold-accent), var(--orange-bright));
+            color: #070310;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        /* Progress Banner */
+        .import-progress-box {
+            background: rgba(255, 138, 31, 0.15);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+            display: none;
+        }
+
+        .progress-bar-outer {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.6rem;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--orange-bright), var(--gold-accent));
+            transition: width 0.3s;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #FFF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Admin Header -->
+    <header class="admin-nav" id="admin-header" style="display: none;">
+        <div class="admin-brand">
+            <h1>NEXORA 2K26</h1>
+            <span class="admin-badge">ADMIN CONSOLE</span>
+        </div>
+        <div class="admin-user-info">
+            <span class="user-email-text" id="admin-user-email">admin@svec.edu.in</span>
+            <a href="/" target="_blank" style="color: var(--gold-accent); font-size: 0.82rem; text-decoration: none; font-weight: 600;">⚡ Open Portal</a>
+            <button type="button" class="btn-signout" id="btn-signout">Sign Out</button>
+        </div>
+    </header>
+
+    <!-- Admin Login Section -->
+    <section class="login-wrap" id="login-section">
+        <div class="login-card">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔐</div>
+            <h2 class="login-title">Coordinator Sign In</h2>
+            <p class="login-desc">Sign in with authorized Firebase credentials to manage Freshers 2K26 invitations.</p>
+
+            <div class="alert-box alert-error" id="login-error-alert"></div>
+
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label class="form-label" for="login-email">Admin Email</label>
+                    <input type="email" id="login-email" class="form-input" placeholder="admin@svec.edu.in" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required>
+                </div>
+                <button type="submit" id="btn-login-submit" class="btn-primary-action">
+                    <span>Unlock Admin Console</span>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Main Admin Dashboard View -->
+    <main class="admin-container" id="dashboard-section" style="display: none;">
+
+        <!-- Alert Notification Box -->
+        <div class="alert-box" id="dashboard-alert"></div>
+
+        <!-- Import Progress Bar -->
+        <div class="import-progress-box" id="import-progress-box">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
+                <span id="import-status-text">Importing students to Firestore...</span>
+                <span id="import-percent-text">0%</span>
+            </div>
+            <div class="progress-bar-outer">
+                <div class="progress-bar-inner" id="progress-bar-fill"></div>
+            </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div>
+                    <div class="stat-val" id="stat-total">0</div>
+                    <div class="stat-label">Registered Students</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎟️</div>
+                <div>
+                    <div class="stat-val" id="stat-generated" style="color: var(--success);">0</div>
+                    <div class="stat-label">Invitations Generated</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📥</div>
+                <div>
+                    <div class="stat-val" id="stat-downloaded" style="color: var(--gold-accent);">0</div>
+                    <div class="stat-label">Total Downloads</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📩</div>
+                <div>
+                    <div class="stat-val" id="stat-pending-reqs" style="color: var(--danger);">0</div>
+                    <div class="stat-label">Pending Requests</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div class="admin-tabs-bar">
+            <button type="button" class="tab-btn active" id="tab-btn-students">
+                <span>👥 Students Directory</span>
+            </button>
+            <button type="button" class="tab-btn" id="tab-btn-requests">
+                <span>📩 Download Requests</span>
+                <span class="tab-badge" id="badge-pending-count" style="display: none;">0</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: STUDENTS DIRECTORY -->
+        <div id="tab-content-students">
+            <!-- Toolbar -->
+            <div class="toolbar-panel">
+                <div class="toolbar-search">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-students" class="search-input" placeholder="Search by Roll No, Student Name, Section, or Department...">
+                </div>
+
+                <div class="toolbar-buttons">
+                    <button type="button" class="btn-tool btn-tool-primary" id="btn-open-add-modal">
+                        <span>➕ Add Student</span>
+                    </button>
+                    <label class="btn-tool" style="cursor: pointer;">
+                        <span>📁 Import CSV</span>
+                        <input type="file" id="csv-file-input" accept=".csv" style="display: none;">
+                    </label>
+                    <button type="button" class="btn-tool" id="btn-quick-seed-batch" title="Quick import 318 official freshmen parsed from college list">
+                        <span>⚡ Quick Batch (318 CSE)</span>
+                    </button>
+                    <button type="button" class="btn-tool" id="btn-export-csv">
+                        <span>⬇️ Export CSV</span>
+                    </button>
+                    <button type="button" class="btn-tool" id="btn-refresh-list" title="Reload from Firestore">
+                        <span>🔄 Refresh</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Students Table -->
+            <div class="table-panel">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Roll Number</th>
+                                <th>Student Name</th>
+                                <th>Department</th>
+                                <th>Year / Sec</th>
+                                <th>Pass Status</th>
+                                <th>Downloads</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table-body">
+                            <tr>
+                                <td colspan="8" class="empty-placeholder">
+                                    <span class="spinner"></span> Loading registered students from Firestore...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: DOWNLOAD REQUESTS -->
+        <div id="tab-content-requests" style="display: none;">
+            <div class="toolbar-panel">
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--gold-accent);">Filter Requests:</span>
+                    <button type="button" class="btn-tool active-req-filter" id="filter-req-all" onclick="window.filterRequests('all')">All</button>
+                    <button type="button" class="btn-tool" id="filter-req-pending" onclick="window.filterRequests('pending')">Pending</button>
+                    <button type="button" class="btn-tool" id="filter-req-approved" onclick="window.filterRequests('approved')">Approved</button>
+                    <button type="button" class="btn-tool" id="filter-req-denied" onclick="window.filterRequests('denied')">Denied</button>
+                </div>
+            </div>
+
+            <div class="table-panel">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Roll Number</th>
+                                <th>Student Name</th>
+                                <th>Reason</th>
+                                <th>Downloads (Used / Max)</th>
+                                <th>Status</th>
+                                <th>Decision Info</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requests-table-body">
+                            <tr>
+                                <td colspan="8" class="empty-placeholder">
+                                    <span class="spinner"></span> Loading requests...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal: Add Student -->
+    <div class="modal-overlay" id="modal-add-student">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Student</h3>
+                <button type="button" class="modal-close" id="btn-close-add-modal">&times;</button>
+            </div>
+            <form id="form-add-student">
+                <div class="form-group">
+                    <label class="form-label" for="add-roll">Roll Number (Document ID)</label>
+                    <input type="text" id="add-roll" class="form-input" placeholder="e.g. 26A81A0501" maxlength="20" required autocapitalize="characters">
+                    <span style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.2rem; display: block;">Duplicates are strictly blocked.</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="add-name">Student Full Name</label>
+                    <input type="text" id="add-name" class="form-input" placeholder="e.g. ADABALA BHAVYA TEJASRI" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="add-dept">Department</label>
+                    <input type="text" id="add-dept" class="form-input" value="CSE" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="add-year">Year / Section</label>
+                    <input type="text" id="add-year" class="form-input" value="1st Year (Section A)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="add-phone">Phone Number (Optional)</label>
+                    <input type="tel" id="add-phone" class="form-input" placeholder="e.g. +91 9876543210">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal-cancel" id="btn-cancel-add">Cancel</button>
+                    <button type="submit" class="btn-modal-save" id="btn-save-add">Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Student & Manage Download Limits -->
+    <div class="modal-overlay" id="modal-edit-student">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Student & Limits</h3>
+                <button type="button" class="modal-close" id="btn-close-edit-modal">&times;</button>
+            </div>
+            <form id="form-edit-student">
+                <div class="form-group">
+                    <label class="form-label">Roll Number</label>
+                    <input type="text" id="edit-roll" class="form-input" disabled style="opacity: 0.7;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-name">Student Name</label>
+                    <input type="text" id="edit-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-dept">Department</label>
+                    <input type="text" id="edit-dept" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-year">Year / Section</label>
+                    <input type="text" id="edit-year" class="form-input">
+                </div>
+
+                <!-- Download Limits Group -->
+                <div style="background: rgba(255, 138, 31, 0.08); border: 1px solid var(--border-glow); border-radius: 8px; padding: 1rem; margin-bottom: 1.2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                        <span style="font-size: 0.82rem; font-weight: 700; color: var(--gold-accent); text-transform: uppercase;">Download Allowance</span>
+                        <button type="button" class="btn-table btn-del" id="btn-reset-downloads-zero" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
+                            🔄 Reset Count to 0
+                        </button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+                        <div>
+                            <label class="form-label" for="edit-downloads-used" style="font-size: 0.75rem;">Downloads Used</label>
+                            <input type="number" id="edit-downloads-used" class="form-input" min="0" value="0">
+                        </div>
+                        <div>
+                            <label class="form-label" for="edit-downloads-allowed" style="font-size: 0.75rem;">Allowed Copies</label>
+                            <input type="number" id="edit-downloads-allowed" class="form-input" min="1" value="1">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal-cancel" id="btn-cancel-edit">Cancel</button>
+                    <button type="submit" class="btn-modal-save" id="btn-save-edit">Update Details</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Modular SDK Script -->
+    <script type="module">
+        import { 
+            db, 
+            auth, 
+            doc, 
+            getDoc, 
+            setDoc, 
+            updateDoc, 
+            deleteDoc, 
+            collection, 
+            getDocs, 
+            onSnapshot,
+            serverTimestamp,
+            writeBatch,
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "/static/invites/js/firebase.js";
+
+        // Global State
+        let allStudents = [];
+        let filteredStudents = [];
+        let allRequests = [];
+        let reqFilter = 'all';
+
+        // DOM elements
+        const loginSection = document.getElementById('login-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const adminHeader = document.getElementById('admin-header');
+        const adminUserEmail = document.getElementById('admin-user-email');
+        const loginForm = document.getElementById('admin-login-form');
+        const loginErrorAlert = document.getElementById('login-error-alert');
+        const btnSignout = document.getElementById('btn-signout');
+
+        const statTotal = document.getElementById('stat-total');
+        const statGenerated = document.getElementById('stat-generated');
+        const statDownloaded = document.getElementById('stat-downloaded');
+        const statPendingReqs = document.getElementById('stat-pending-reqs');
+        const badgePending = document.getElementById('badge-pending-count');
+
+        const tabBtnStudents = document.getElementById('tab-btn-students');
+        const tabBtnRequests = document.getElementById('tab-btn-requests');
+        const tabContentStudents = document.getElementById('tab-content-students');
+        const tabContentRequests = document.getElementById('tab-content-requests');
+
+        const searchInput = document.getElementById('search-students');
+        const tableBody = document.getElementById('students-table-body');
+        const requestsTableBody = document.getElementById('requests-table-body');
+        const dashboardAlert = document.getElementById('dashboard-alert');
+
+        // Modal elements
+        const modalAdd = document.getElementById('modal-add-student');
+        const modalEdit = document.getElementById('modal-edit-student');
+        const formAdd = document.getElementById('form-add-student');
+        const formEdit = document.getElementById('form-edit-student');
+
+        // Import progress
+        const importBox = document.getElementById('import-progress-box');
+        const importStatusText = document.getElementById('import-status-text');
+        const importPercentText = document.getElementById('import-percent-text');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+
+        // 1. Auth Listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                adminUserEmail.textContent = user.email || 'Admin';
+                loginSection.style.display = 'none';
+                dashboardSection.style.display = 'block';
+                adminHeader.style.display = 'flex';
+                loadStudentsList();
+                bindRealtimeRequests();
+            } else {
+                loginSection.style.display = 'flex';
+                dashboardSection.style.display = 'none';
+                adminHeader.style.display = 'none';
+            }
+        });
+
+        // 2. Tabs Switcher
+        tabBtnStudents.addEventListener('click', () => {
+            tabBtnStudents.classList.add('active');
+            tabBtnRequests.classList.remove('active');
+            tabContentStudents.style.display = 'block';
+            tabContentRequests.style.display = 'none';
+        });
+
+        tabBtnRequests.addEventListener('click', () => {
+            tabBtnRequests.classList.add('active');
+            tabBtnStudents.classList.remove('active');
+            tabContentRequests.style.display = 'block';
+            tabContentStudents.style.display = 'none';
+            renderRequestsTable();
+        });
+
+        // 3. Login Action
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value;
+            const btn = document.getElementById('btn-login-submit');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Authenticating...';
+            loginErrorAlert.style.display = 'none';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (err) {
+                loginErrorAlert.textContent = formatAuthError(err.code || err.message);
+                loginErrorAlert.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = 'Unlock Admin Console';
+            }
+        });
+
+        btnSignout.addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        function formatAuthError(code) {
+            if (code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')) {
+                return 'Invalid email or password. Please verify your credentials.';
+            }
+            if (code.includes('too-many-requests')) {
+                return 'Too many failed login attempts. Please wait a few minutes.';
+            }
+            return `Authentication error: ${code}`;
+        }
+
+        // 4. Load Students from Firestore
+        async function loadStudentsList() {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="empty-placeholder">
+                        <span class="spinner"></span> Loading registered students from Firestore...
+                    </td>
+                </tr>
+            `;
+            try {
+                const snapshot = await getDocs(collection(db, "students"));
+                allStudents = [];
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    allStudents.push({
+                        id: docSnap.id,
+                        rollNo: data.rollNo || docSnap.id,
+                        name: data.name || '',
+                        department: data.department || '',
+                        year: data.year || '',
+                        phone: data.phone || '',
+                        invitationGenerated: data.invitationGenerated === true,
+                        downloadCount: data.downloadCount || 0,
+                        downloadAllowed: data.downloadAllowed !== undefined ? data.downloadAllowed : 1,
+                        generatedAt: data.generatedAt || null,
+                        lastDownloadAt: data.lastDownloadAt || null,
+                        createdAt: data.createdAt || null
+                    });
+                });
+
+                allStudents.sort((a, b) => a.rollNo.localeCompare(b.rollNo));
+                filteredStudents = [...allStudents];
+                updateStats();
+                renderTable();
+
+            } catch (err) {
+                console.error("Error loading students:", err);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="empty-placeholder" style="color: var(--danger);">
+                            ⚠️ Failed to load students: ${err.message}.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function updateStats() {
+            const total = allStudents.length;
+            const generated = allStudents.filter(s => s.invitationGenerated).length;
+            const totalDownloads = allStudents.reduce((acc, s) => acc + (s.downloadCount || 0), 0);
+            const pendingReqs = allRequests.filter(r => r.status === 'pending').length;
+
+            statTotal.textContent = total;
+            statGenerated.textContent = generated;
+            statDownloaded.textContent = totalDownloads;
+            statPendingReqs.textContent = pendingReqs;
+
+            if (pendingReqs > 0) {
+                badgePending.textContent = pendingReqs;
+                badgePending.style.display = 'inline-block';
+            } else {
+                badgePending.style.display = 'none';
+            }
+        }
+
+        function renderTable() {
+            if (filteredStudents.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="empty-placeholder">
+                            ${allStudents.length === 0 ? 'No students registered in Firestore yet. Click "Add Student" or "Import CSV".' : 'No students matching your search criteria.'}
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            let html = '';
+            filteredStudents.forEach((st, idx) => {
+                const count = st.downloadCount || 0;
+                const allowed = st.downloadAllowed !== undefined ? st.downloadAllowed : 1;
+                const isLimitHit = count >= allowed;
+
+                html += `
+                    <tr>
+                        <td style="color: var(--text-dim);">${idx + 1}</td>
+                        <td class="roll-code">${escapeHtml(st.rollNo)}</td>
+                        <td style="font-weight: 600;">${escapeHtml(st.name)}</td>
+                        <td>${escapeHtml(st.department)}</td>
+                        <td style="color: var(--text-dim);">${escapeHtml(st.year)}</td>
+                        <td>
+                            ${st.invitationGenerated ? 
+                                '<span class="status-pill status-generated">✓ Generated</span>' : 
+                                '<span class="status-pill status-pending">Pending</span>'}
+                        </td>
+                        <td>
+                            <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: ${isLimitHit ? '#FF6B81' : 'var(--gold-accent)'};">
+                                ${count} / ${allowed}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="table-actions">
+                                <button type="button" class="btn-table btn-edit" onclick="window.openEditModal('${st.id}')">Edit / Limits</button>
+                                <button type="button" class="btn-table btn-del" onclick="window.deleteStudent('${st.id}')">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            tableBody.innerHTML = html;
+        }
+
+        // 5. Real-Time Download Requests Listener
+        function bindRealtimeRequests() {
+            onSnapshot(collection(db, "downloadRequests"), (snap) => {
+                allRequests = [];
+                snap.forEach(d => {
+                    allRequests.push({ id: d.id, ...d.data() });
+                });
+
+                // Sort newest requests first
+                allRequests.sort((a, b) => {
+                    const timeA = a.requestedAt ? (a.requestedAt.seconds || 0) : 0;
+                    const timeB = b.requestedAt ? (b.requestedAt.seconds || 0) : 0;
+                    return timeB - timeA;
+                });
+
+                updateStats();
+                renderRequestsTable();
+            }, (err) => {
+                console.error("Download requests listener error:", err);
+            });
+        }
+
+        window.filterRequests = (status) => {
+            reqFilter = status;
+            ['all', 'pending', 'approved', 'denied'].forEach(s => {
+                const el = document.getElementById(`filter-req-${s}`);
+                if (el) {
+                    if (s === status) el.classList.add('btn-tool-primary');
+                    else el.classList.remove('btn-tool-primary');
+                }
+            });
+            renderRequestsTable();
+        };
+
+        function renderRequestsTable() {
+            let list = allRequests;
+            if (reqFilter !== 'all') {
+                list = allRequests.filter(r => r.status === reqFilter);
+            }
+
+            if (list.length === 0) {
+                requestsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="empty-placeholder">
+                            ${allRequests.length === 0 ? 'No download requests submitted by students yet.' : `No ${reqFilter} requests.`}
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            let html = '';
+            list.forEach(r => {
+                const reqTime = formatTimestamp(r.requestedAt);
+                const st = allStudents.find(s => s.id === r.rollNo);
+                const currentUsage = st ? `${st.downloadCount || 0} / ${st.downloadAllowed !== undefined ? st.downloadAllowed : 1}` : '—';
+
+                let statusBadge = '';
+                if (r.status === 'pending') {
+                    statusBadge = '<span class="status-pill" style="background: rgba(255, 170, 0, 0.2); border: 1px solid #FFAA00; color: #FFD37A;">⏳ Pending</span>';
+                } else if (r.status === 'approved') {
+                    statusBadge = `<span class="status-pill status-generated">✅ Approved (+${r.extraDownloads || 1})</span>`;
+                } else {
+                    statusBadge = '<span class="status-pill" style="background: rgba(255, 71, 87, 0.2); border: 1px solid #FF4757; color: #FFA4B0;">❌ Denied</span>';
+                }
+
+                const decisionInfo = r.decidedBy ? 
+                    `<div style="font-size: 0.75rem; color: var(--text-dim);">${escapeHtml(r.decidedBy)}<br>${formatTimestamp(r.decidedAt)}</div>` : 
+                    '—';
+
+                let actionsHtml = '';
+                if (r.status === 'pending') {
+                    actionsHtml = `
+                        <div class="table-actions">
+                            <input type="number" id="grant-extra-${r.id}" value="1" min="1" max="10" style="width: 50px; padding: 0.25rem 0.35rem; background: rgba(10,4,20,0.8); border: 1px solid var(--border-glow); border-radius: 4px; color: #FFF; font-size: 0.8rem; text-align: center;">
+                            <button type="button" class="btn-table btn-approve" onclick="window.approveRequest('${r.id}', '${r.rollNo}')">Approve</button>
+                            <button type="button" class="btn-table btn-deny" onclick="window.denyRequest('${r.id}')">Deny</button>
+                        </div>
+                    `;
+                } else {
+                    actionsHtml = `
+                        <div class="table-actions">
+                            <button type="button" class="btn-table btn-edit" onclick="window.reopenRequest('${r.id}')">Modify Decision</button>
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <tr>
+                        <td style="font-size: 0.8rem; color: var(--text-dim);">${reqTime}</td>
+                        <td class="roll-code">${escapeHtml(r.rollNo)}</td>
+                        <td style="font-weight: 600;">${escapeHtml(r.studentName || '')}</td>
+                        <td style="max-width: 250px; font-size: 0.85rem; color: rgba(255,255,255,0.9);">${escapeHtml(r.reason || 'No reason provided')}</td>
+                        <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--gold-accent);">${currentUsage}</td>
+                        <td>${statusBadge}</td>
+                        <td>${decisionInfo}</td>
+                        <td>${actionsHtml}</td>
+                    </tr>
+                `;
+            });
+
+            requestsTableBody.innerHTML = html;
+        }
+
+        // 6. APPROVE REQUEST
+        window.approveRequest = async (reqId, rollNo) => {
+            const input = document.getElementById(`grant-extra-${reqId}`);
+            const extraCount = parseInt(input ? input.value : 1, 10) || 1;
+
+            try {
+                // Read current student to increment downloadAllowed
+                const studentRef = doc(db, "students", rollNo);
+                const sDoc = await getDoc(studentRef);
+                const currentAllowed = (sDoc.exists() && sDoc.data().downloadAllowed !== undefined) ? sDoc.data().downloadAllowed : 1;
+
+                // Update student downloadAllowed
+                await updateDoc(studentRef, {
+                    downloadAllowed: currentAllowed + extraCount
+                });
+
+                // Update request doc
+                await updateDoc(doc(db, "downloadRequests", reqId), {
+                    status: 'approved',
+                    extraDownloads: extraCount,
+                    decidedAt: serverTimestamp(),
+                    decidedBy: auth.currentUser ? auth.currentUser.email : 'Admin'
+                });
+
+                showDashboardAlert(`Approved extra ${extraCount} download(s) for ${rollNo}!`, 'success');
+                loadStudentsList();
+
+            } catch (err) {
+                alert(`Approval failed: ${err.message}`);
+            }
+        };
+
+        // 7. DENY REQUEST
+        window.denyRequest = async (reqId) => {
+            if (!confirm("Are you sure you want to deny this download request?")) return;
+
+            try {
+                await updateDoc(doc(db, "downloadRequests", reqId), {
+                    status: 'denied',
+                    decidedAt: serverTimestamp(),
+                    decidedBy: auth.currentUser ? auth.currentUser.email : 'Admin'
+                });
+
+                showDashboardAlert(`Request for ${reqId} denied.`, 'error');
+            } catch (err) {
+                alert(`Denial failed: ${err.message}`);
+            }
+        };
+
+        window.reopenRequest = async (reqId) => {
+            try {
+                await updateDoc(doc(db, "downloadRequests", reqId), {
+                    status: 'pending',
+                    decidedAt: null,
+                    decidedBy: null
+                });
+                showDashboardAlert(`Request ${reqId} reopened to Pending.`, 'success');
+            } catch (err) {
+                alert(`Failed to reopen: ${err.message}`);
+            }
+        };
+
+        // 8. Search Students
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            if (!query) {
+                filteredStudents = [...allStudents];
+            } else {
+                filteredStudents = allStudents.filter(s => 
+                    s.rollNo.toLowerCase().includes(query) ||
+                    s.name.toLowerCase().includes(query) ||
+                    s.department.toLowerCase().includes(query) ||
+                    s.year.toLowerCase().includes(query)
+                );
+            }
+            renderTable();
+        });
+
+        document.getElementById('btn-refresh-list').addEventListener('click', loadStudentsList);
+
+        // 9. Add Student
+        document.getElementById('btn-open-add-modal').addEventListener('click', () => {
+            formAdd.reset();
+            modalAdd.style.display = 'flex';
+        });
+
+        document.getElementById('btn-close-add-modal').addEventListener('click', () => modalAdd.style.display = 'none');
+        document.getElementById('btn-cancel-add').addEventListener('click', () => modalAdd.style.display = 'none');
+
+        formAdd.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const roll = document.getElementById('add-roll').value.trim().toUpperCase();
+            const name = document.getElementById('add-name').value.trim().toUpperCase();
+            const dept = document.getElementById('add-dept').value.trim();
+            const year = document.getElementById('add-year').value.trim();
+            const phone = document.getElementById('add-phone').value.trim();
+            const saveBtn = document.getElementById('btn-save-add');
+
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="spinner"></span> Saving...';
+
+            try {
+                const existingDoc = await getDoc(doc(db, "students", roll));
+                if (existingDoc.exists()) {
+                    alert(`Error: Student with roll number "${roll}" already exists! Duplicates are not allowed.`);
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save Student';
+                    return;
+                }
+
+                await setDoc(doc(db, "students", roll), {
+                    rollNo: roll,
+                    name: name,
+                    department: dept,
+                    year: year,
+                    phone: phone,
+                    downloadCount: 0,
+                    downloadAllowed: 1,
+                    createdAt: serverTimestamp(),
+                    invitationGenerated: false,
+                    generatedAt: null
+                });
+
+                modalAdd.style.display = 'none';
+                showDashboardAlert(`Student ${name} (${roll}) added successfully!`, 'success');
+                loadStudentsList();
+
+            } catch (err) {
+                alert(`Failed to save student: ${err.message}`);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Student';
+            }
+        });
+
+        // 10. Edit Student & Download Allowance
+        window.openEditModal = (roll) => {
+            const student = allStudents.find(s => s.id === roll);
+            if (!student) return;
+
+            document.getElementById('edit-roll').value = student.rollNo;
+            document.getElementById('edit-name').value = student.name;
+            document.getElementById('edit-dept').value = student.department;
+            document.getElementById('edit-year').value = student.year;
+            document.getElementById('edit-downloads-used').value = student.downloadCount || 0;
+            document.getElementById('edit-downloads-allowed').value = student.downloadAllowed !== undefined ? student.downloadAllowed : 1;
+
+            modalEdit.style.display = 'flex';
+        };
+
+        document.getElementById('btn-close-edit-modal').addEventListener('click', () => modalEdit.style.display = 'none');
+        document.getElementById('btn-cancel-edit').addEventListener('click', () => modalEdit.style.display = 'none');
+
+        // Reset to 0 button in modal
+        document.getElementById('btn-reset-downloads-zero').addEventListener('click', () => {
+            document.getElementById('edit-downloads-used').value = 0;
+        });
+
+        formEdit.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const roll = document.getElementById('edit-roll').value;
+            const name = document.getElementById('edit-name').value.trim().toUpperCase();
+            const dept = document.getElementById('edit-dept').value.trim();
+            const year = document.getElementById('edit-year').value.trim();
+            const used = parseInt(document.getElementById('edit-downloads-used').value, 10) || 0;
+            const allowed = parseInt(document.getElementById('edit-downloads-allowed').value, 10) || 1;
+            const saveBtn = document.getElementById('btn-save-edit');
+
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="spinner"></span> Updating...';
+
+            try {
+                await updateDoc(doc(db, "students", roll), {
+                    name: name,
+                    department: dept,
+                    year: year,
+                    downloadCount: used,
+                    downloadAllowed: allowed
+                });
+
+                modalEdit.style.display = 'none';
+                showDashboardAlert(`Updated ${name} (${roll}) [${used}/${allowed} downloads]!`, 'success');
+                loadStudentsList();
+
+            } catch (err) {
+                alert(`Update failed: ${err.message}`);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Update Details';
+            }
+        });
+
+        // 11. Delete Student
+        window.deleteStudent = async (roll) => {
+            if (!confirm(`Are you sure you want to delete student with Roll Number ${roll}? This cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                await deleteDoc(doc(db, "students", roll));
+                showDashboardAlert(`Student ${roll} removed from database.`, 'success');
+                loadStudentsList();
+            } catch (err) {
+                alert(`Delete failed: ${err.message}`);
+            }
+        };
+
+        // 12. Quick Batch Import (318 CSE Students)
+        document.getElementById('btn-quick-seed-batch').addEventListener('click', async () => {
+            if (!confirm("Import the 318 official Freshers 2026 students (Sections A through E) into Firestore?")) {
+                return;
+            }
+
+            try {
+                importBox.style.display = 'block';
+                importStatusText.textContent = 'Fetching student data...';
+                progressBarFill.style.width = '10%';
+                importPercentText.textContent = '10%';
+
+                const res = await fetch('/static/invites/data/students.json');
+                const list = await res.json();
+                await importStudentsInBatches(list);
+
+            } catch (err) {
+                alert(`Quick batch import failed: ${err.message}`);
+                importBox.style.display = 'none';
+            }
+        });
+
+        // 13. CSV File Import
+        document.getElementById('csv-file-input').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const text = await file.text();
+            const rows = parseCSV(text);
+            if (rows.length === 0) {
+                alert('No valid student rows found in CSV. Expected headers: roll_no, name, department, year');
+                return;
+            }
+
+            if (confirm(`Found ${rows.length} records in "${file.name}". Import them into Firestore?`)) {
+                await importStudentsInBatches(rows);
+            }
+            e.target.value = '';
+        });
+
+        async function importStudentsInBatches(records) {
+            importBox.style.display = 'block';
+            let imported = 0;
+            let skipped = 0;
+            const total = records.length;
+
+            const BATCH_SIZE = 450;
+            for (let i = 0; i < total; i += BATCH_SIZE) {
+                const chunk = records.slice(i, i + BATCH_SIZE);
+                const batch = writeBatch(db);
+
+                chunk.forEach(item => {
+                    const roll = (item.roll_no || item.rollNo || item.roll || '').trim().toUpperCase();
+                    const name = (item.name || item.student_name || '').trim().toUpperCase();
+                    const dept = (item.department || item.dept || 'CSE').trim();
+                    const year = (item.year || item.section ? `1st Year (${item.section})` : '1st Year').trim();
+                    const phone = (item.phone || '').trim();
+
+                    if (roll && name) {
+                        const studentRef = doc(db, "students", roll);
+                        batch.set(studentRef, {
+                            rollNo: roll,
+                            name: name,
+                            department: dept,
+                            year: year,
+                            phone: phone,
+                            downloadCount: 0,
+                            downloadAllowed: 1,
+                            createdAt: serverTimestamp(),
+                            invitationGenerated: false,
+                            generatedAt: null
+                        }, { merge: true });
+                        imported++;
+                    } else {
+                        skipped++;
+                    }
+                });
+
+                await batch.commit();
+
+                const percent = Math.round(((i + chunk.length) / total) * 100);
+                progressBarFill.style.width = `${percent}%`;
+                importPercentText.textContent = `${percent}%`;
+                importStatusText.textContent = `Imported ${Math.min(i + chunk.length, total)} of ${total} students...`;
+            }
+
+            importStatusText.textContent = `Completed! ${imported} students saved, ${skipped} skipped.`;
+            setTimeout(() => {
+                importBox.style.display = 'none';
+                progressBarFill.style.width = '0%';
+            }, 3000);
+
+            showDashboardAlert(`Successfully imported ${imported} students into Firestore!`, 'success');
+            loadStudentsList();
+        }
+
+        function parseCSV(text) {
+            const lines = text.trim().split(/\r?\n/);
+            if (lines.length < 2) return [];
+
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/^["']|["']$/g, ''));
+            const results = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const row = lines[i].split(',').map(c => c.trim().replace(/^["']|["']$/g, ''));
+                if (row.length === headers.length) {
+                    const obj = {};
+                    headers.forEach((h, idx) => { obj[h] = row[idx]; });
+                    results.push(obj);
+                }
+            }
+            return results;
+        }
+
+        // 14. Export to CSV
+        document.getElementById('btn-export-csv').addEventListener('click', () => {
+            if (allStudents.length === 0) {
+                alert('No students to export.');
+                return;
+            }
+
+            const headers = ['roll_no', 'name', 'department', 'year', 'phone', 'invitation_generated', 'download_count', 'download_allowed', 'generated_at'];
+            const rows = [headers.join(',')];
+
+            allStudents.forEach(s => {
+                const genStr = s.generatedAt ? (s.generatedAt.toDate ? s.generatedAt.toDate().toISOString() : s.generatedAt) : '';
+                rows.push([
+                    `"${s.rollNo}"`,
+                    `"${s.name.replace(/"/g, '""')}"`,
+                    `"${s.department.replace(/"/g, '""')}"`,
+                    `"${s.year.replace(/"/g, '""')}"`,
+                    `"${s.phone || ''}"`,
+                    s.invitationGenerated ? 'true' : 'false',
+                    s.downloadCount || 0,
+                    s.downloadAllowed !== undefined ? s.downloadAllowed : 1,
+                    `"${genStr}"`
+                ].join(','));
+            });
+
+            const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `NEXORA_2K26_Students_Export_${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        function formatTimestamp(ts) {
+            if (!ts) return '—';
+            try {
+                const d = ts.toDate ? ts.toDate() : new Date(ts);
+                return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) + ' ' + 
+                       d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                return '—';
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, m => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+            })[m]);
+        }
+
+        function showDashboardAlert(msg, type = 'success') {
+            dashboardAlert.textContent = msg;
+            dashboardAlert.className = `alert-box alert-${type}`;
+            dashboardAlert.style.display = 'block';
+            setTimeout(() => {
+                dashboardAlert.style.display = 'none';
+            }, 4500);
+        }
+    </script>
+</body>
+</html>

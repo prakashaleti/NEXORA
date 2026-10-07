@@ -1,0 +1,423 @@
+{% extends "invites/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if student %}
+        VIP Invitation Pass for {{ student.name }} ({{ student.roll_no }}) | {{ EVENT.NAME }}
+    {% else %}
+        Freshers Party 2K26 NEXORA invitation - Sri Vasavi Engineering College
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="invite-page-container desktop-invite-container">
+
+    <!-- Not Registered Error Panel -->
+    <section id="invite-error-panel" class="error-panel desktop-error-panel" style="display: none; text-align: center; max-width: 500px; margin: 2rem auto; padding: 2.2rem 2rem; background: rgba(18, 9, 36, 0.85); border: 1.5px solid #FF4757; border-radius: 14px; box-shadow: 0 15px 40px rgba(0,0,0,0.8);" role="alert" aria-live="assertive">
+        <div style="font-size: 2.5rem; margin-bottom: 0.8rem;">⚠️</div>
+        <h2 style="font-family: 'Cinzel', serif; font-size: 1.3rem; color: #FFA4B0; margin-bottom: 0.6rem;">
+            Roll Number Not Registered
+        </h2>
+        <p id="invite-error-msg" style="color: var(--text-dim); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;">
+            Roll number not registered. Contact your coordinator.
+        </p>
+        <a href="{% url 'invites:home' %}" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.6rem; text-decoration: none;">
+            <span>← Return to Portal</span>
+        </a>
+    </section>
+
+    <!-- Main Invitation Pass Showcase -->
+    <div id="invite-showcase" class="desktop-pass-showcase" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+        
+        <!-- Personalized student greeting badge -->
+        <div id="student-ribbon" class="student-welcome-ribbon" style="text-align: center; margin-bottom: 1.25rem; {% if not student %}display: none;{% endif %}">
+            <span class="badge-freshers-pill" id="student-pill-text">
+                🌟 Honored Guest: {{ student.name|default:'Junior' }} &bull; {{ student.roll_no }}
+            </span>
+        </div>
+
+        <article
+            id="invitation-card"
+            class="official-pass-card"
+            data-name="{{ student.name|default:'' }}"
+            data-roll="{{ student.roll_no|default:'' }}"
+            data-pass="{{ student.pass_no|default:'NEXORA-2K26' }}"
+            aria-label="Freshers Party 2K26 NEXORA invitation - Sri Vasavi Engineering College"
+            style="width: 100%; max-width: 480px; margin: 0 auto; display: flex; justify-content: center; position: relative; transform: none !important;"
+        >
+            <div class="card-shimmer-border"></div>
+            <div class="card-glare"></div>
+
+            <img
+                id="official-pass-img"
+                {% if student and student.roll_no %}
+                src="{% url 'invites:pass_image' %}?roll={{ student.roll_no }}&name={{ student.name|urlencode }}&dept={{ student.department|urlencode }}"
+                {% else %}
+                src="{% static 'invites/img/Freshers_Party_Invitation_edited.png' %}"
+                {% endif %}
+                alt="Freshers Party 2K26 NEXORA invitation - Sri Vasavi Engineering College"
+                class="official-pass-img"
+                width="682"
+                height="1024"
+                loading="eager"
+                style="width: 100%; max-width: 480px; height: auto; object-fit: contain; display: block; margin: 0 auto; border-radius: 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 35px rgba(212, 175, 55, 0.25);"
+            >
+        </article>
+
+        <!-- Actions Bar -->
+        <div class="card-actions-row desktop-actions-row" style="display: flex; flex-direction: column; align-items: center; margin-top: 1.5rem; margin-bottom: 1rem; width: 100%; max-width: 480px;">
+            <div style="display: flex; justify-content: center; gap: 1rem; width: 100%; flex-wrap: wrap;">
+                <button
+                    type="button"
+                    id="btn-download-invite"
+                    class="btn-primary desktop-btn-action"
+                    aria-label="Download Invitation"
+                    style="display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; cursor: pointer; border: none;"
+                >
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span id="btn-download-text">Download Invitation</span>
+                </button>
+
+                <button type="button" id="btn-share-invite" class="btn-secondary desktop-btn-action" aria-label="Share invitation" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    <span>Share With Classmates</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Friendly Download Limit Reached Modal -->
+<div class="modal-overlay" id="modal-download-limit" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; padding: 1.25rem;">
+    <div class="modal-card" style="background: #110724; border: 1.5px solid rgba(255, 138, 31, 0.45); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem 1.8rem; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 35px rgba(255, 138, 31, 0.25); text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.2rem;">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <span style="font-size: 1.8rem;">🎉</span>
+                <h3 style="font-family: 'Cinzel', serif; font-size: 1.25rem; color: #FFC55A;">Download Limit Reached</h3>
+            </div>
+            <button type="button" id="btn-close-limit-modal" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 1.6rem; cursor: pointer; line-height: 1;">&times;</button>
+        </div>
+
+        <p id="limit-modal-msg" style="color: rgba(255, 255, 255, 0.9); font-size: 0.94rem; line-height: 1.55; margin-bottom: 1.4rem;">
+            Hey <strong id="limit-student-name">there</strong>! 🎉 You've already downloaded your invitation. To keep things fair, each student gets one download. Need another copy? Send a quick request to the admin.
+        </p>
+
+        <!-- Live Status Banner inside Modal -->
+        <div id="modal-request-banner" style="display: none; margin-bottom: 1.2rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.88rem; font-weight: 600;"></div>
+
+        <form id="form-request-download">
+            <div style="margin-bottom: 1.2rem;" id="reason-field-group">
+                <label for="request-reason-input" style="display: block; font-size: 0.8rem; color: #FFC55A; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Reason for Extra Copy</label>
+                <textarea id="request-reason-input" rows="3" placeholder="e.g. Lost the file, need to print a physical copy..." style="width: 100%; padding: 0.75rem 0.9rem; background: rgba(10, 4, 20, 0.85); border: 1px solid rgba(255, 138, 31, 0.4); border-radius: 8px; color: #FFF; font-family: inherit; font-size: 0.9rem; outline: none; resize: vertical;" required></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; align-items: center;">
+                <button type="button" id="btn-dismiss-limit-modal" style="padding: 0.65rem 1.2rem; background: rgba(255,255,255,0.1); color: #FFF; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.88rem;">Close</button>
+                <button type="submit" id="btn-submit-download-request" style="padding: 0.65rem 1.4rem; background: linear-gradient(135deg, #FFC55A, #FF8A1F); color: #070310; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.88rem;">Request Another Download</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Firebase Logic: Transactions, Limits, and Real-Time Approval Listener -->
+<script type="module">
+    import { 
+        db, 
+        doc, 
+        getDoc, 
+        setDoc, 
+        updateDoc, 
+        runTransaction, 
+        onSnapshot, 
+        serverTimestamp 
+    } from "{% static 'invites/js/firebase.js' %}";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const rawRoll = urlParams.get('roll');
+    const roll = (rawRoll || '').trim().toUpperCase();
+
+    const showcase = document.getElementById('invite-showcase');
+    const errorPanel = document.getElementById('invite-error-panel');
+    const passImg = document.getElementById('official-pass-img');
+    const downloadBtn = document.getElementById('btn-download-invite');
+    const btnDownloadText = document.getElementById('btn-download-text');
+    const ribbon = document.getElementById('student-ribbon');
+    const pillText = document.getElementById('student-pill-text');
+    const cardArticle = document.getElementById('invitation-card');
+
+    // Modal elements
+    const limitModal = document.getElementById('modal-download-limit');
+    const limitStudentName = document.getElementById('limit-student-name');
+    const btnCloseLimit = document.getElementById('btn-close-limit-modal');
+    const btnDismissLimit = document.getElementById('btn-dismiss-limit-modal');
+    const formRequest = document.getElementById('form-request-download');
+    const requestReasonInput = document.getElementById('request-reason-input');
+    const btnSubmitRequest = document.getElementById('btn-submit-download-request');
+    const modalRequestBanner = document.getElementById('modal-request-banner');
+    const reasonFieldGroup = document.getElementById('reason-field-group');
+
+    let currentStudent = null;
+    let activeRequestStatus = null; // 'pending' | 'approved' | 'denied' | null
+
+    if (roll) {
+        initStudentWithFirestore(roll);
+    }
+
+    function initStudentWithFirestore(studentRoll) {
+        const studentRef = doc(db, "students", studentRoll);
+        const reqRef = doc(db, "downloadRequests", studentRoll);
+
+        // 1. Real-time listener for Student Document (tracks downloadCount & downloadAllowed live)
+        onSnapshot(studentRef, (snap) => {
+            if (!snap.exists()) {
+                showcase.style.display = 'none';
+                errorPanel.style.display = 'block';
+                return;
+            }
+
+            currentStudent = snap.data();
+            const studentName = currentStudent.name || 'Honored Guest';
+            const dept = currentStudent.department || '';
+
+            // Update Header & Card
+            if (pillText) {
+                pillText.textContent = `🌟 Honored Guest: ${studentName} • ${studentRoll}`;
+                ribbon.style.display = 'block';
+            }
+            if (limitStudentName) {
+                limitStudentName.textContent = studentName;
+            }
+            if (cardArticle) {
+                cardArticle.dataset.name = studentName;
+                cardArticle.dataset.roll = studentRoll;
+            }
+
+            const count = currentStudent.downloadCount || 0;
+            const allowed = currentStudent.downloadAllowed !== undefined ? currentStudent.downloadAllowed : 1;
+
+            // Point pass image to stamped version
+            const passUrl = `{% url 'invites:pass_image' %}?roll=${encodeURIComponent(studentRoll)}&name=${encodeURIComponent(studentName)}&dept=${encodeURIComponent(dept)}`;
+            if (passImg && !passImg.src.includes(encodeURIComponent(studentRoll))) {
+                passImg.src = passUrl;
+            }
+
+            // Sync initial invitationGenerated if not yet recorded
+            if (!currentStudent.invitationGenerated) {
+                updateDoc(studentRef, {
+                    invitationGenerated: true,
+                    generatedAt: serverTimestamp()
+                }).catch(() => {});
+            }
+        }, (err) => {
+            console.error("Student snapshot error:", err);
+        });
+
+        // 2. Real-time listener for Download Request status
+        onSnapshot(reqRef, (reqSnap) => {
+            if (!reqSnap.exists()) {
+                activeRequestStatus = null;
+                updateLiveStatusUI(null);
+                return;
+            }
+
+            const reqData = reqSnap.data();
+            activeRequestStatus = reqData.status; // 'pending' | 'approved' | 'denied'
+            updateLiveStatusUI(reqData);
+        }, (err) => {
+            console.error("Request snapshot error:", err);
+        });
+    }
+
+    function updateLiveStatusUI(reqData) {
+        if (!reqData) {
+            modalRequestBanner.style.display = 'none';
+            btnSubmitRequest.disabled = false;
+            btnSubmitRequest.textContent = 'Request Another Download';
+            reasonFieldGroup.style.display = 'block';
+            return;
+        }
+
+        const status = reqData.status;
+
+        if (status === 'pending') {
+            const msg = '⏳ Your request is waiting for admin approval.';
+            renderStatusBanner(msg, 'warning');
+            btnSubmitRequest.disabled = true;
+            btnSubmitRequest.textContent = 'Request Under Review';
+            reasonFieldGroup.style.display = 'none';
+        } else if (status === 'approved') {
+            const msg = '✅ Approved! You can download your invitation.';
+            renderStatusBanner(msg, 'success');
+            btnSubmitRequest.disabled = false;
+            btnSubmitRequest.textContent = 'Submit Another Request';
+            reasonFieldGroup.style.display = 'block';
+        } else if (status === 'denied') {
+            const msg = '❌ Sorry, your request was not approved. Contact your coordinator.';
+            renderStatusBanner(msg, 'error');
+            btnSubmitRequest.disabled = false;
+            btnSubmitRequest.textContent = 'Re-request with Details';
+            reasonFieldGroup.style.display = 'block';
+        }
+    }
+
+    function renderStatusBanner(message, type) {
+        const styles = {
+            warning: { bg: 'rgba(255, 170, 0, 0.2)', border: '#FFAA00', color: '#FFD37A' },
+            success: { bg: 'rgba(46, 213, 115, 0.2)', border: '#2ED573', color: '#A3F7BF' },
+            error: { bg: 'rgba(255, 71, 87, 0.2)', border: '#FF4757', color: '#FFA4B0' }
+        }[type];
+
+        if (modalRequestBanner) {
+            modalRequestBanner.style.background = styles.bg;
+            modalRequestBanner.style.border = `1.5px solid ${styles.border}`;
+            modalRequestBanner.style.color = styles.color;
+            modalRequestBanner.textContent = message;
+            modalRequestBanner.style.display = 'block';
+        }
+    }
+
+    // 3. ATOMIC DOWNLOAD WITH FIRESTORE TRANSACTION
+    downloadBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        if (!roll) {
+            // General unregistered download
+            triggerDirectDownload("{% static 'invites/img/Freshers_Party_Invitation_edited.png' %}", "Freshers_Party_Invitation_NEXORA_2K26.png");
+            return;
+        }
+
+        // Show loading state
+        downloadBtn.disabled = true;
+        const originalText = btnDownloadText.textContent;
+        btnDownloadText.textContent = 'Verifying Download...';
+
+        try {
+            const studentRef = doc(db, "students", roll);
+
+            // Run atomic transaction to verify limit and increment
+            const result = await runTransaction(db, async (transaction) => {
+                const sDoc = await transaction.get(studentRef);
+                if (!sDoc.exists()) {
+                    throw new Error("Student document not found.");
+                }
+
+                const sData = sDoc.data();
+                const count = sData.downloadCount || 0;
+                const allowed = sData.downloadAllowed !== undefined ? sData.downloadAllowed : 1;
+
+                if (count < allowed) {
+                    // Allowed: increment count and update timestamp
+                    transaction.update(studentRef, {
+                        downloadCount: count + 1,
+                        lastDownloadAt: serverTimestamp()
+                    });
+                    return { allowed: true, newCount: count + 1, totalAllowed: allowed };
+                } else {
+                    // Blocked: limit reached
+                    return { allowed: false, currentCount: count, totalAllowed: allowed };
+                }
+            });
+
+            if (result.allowed) {
+                // Success: trigger immediate image file download
+                const studentName = (currentStudent && currentStudent.name) || '';
+                const dept = (currentStudent && currentStudent.department) || '';
+                const passUrl = `{% url 'invites:pass_image' %}?roll=${encodeURIComponent(roll)}&name=${encodeURIComponent(studentName)}&dept=${encodeURIComponent(dept)}&download=1`;
+                triggerDirectDownload(passUrl, `Freshers_Party_Invitation_${roll}.png`);
+
+                // Toast notification
+                const toast = document.getElementById('nexora-toast');
+                if (toast) {
+                    toast.textContent = "Invitation downloaded successfully!";
+                    toast.classList.add('toast-active');
+                    setTimeout(() => toast.classList.remove('toast-active'), 3500);
+                }
+            } else {
+                // Limit reached: open friendly warning popup
+                openLimitModal();
+            }
+
+        } catch (err) {
+            console.error("Download transaction error:", err);
+            alert("Error processing download. Please check your connection and try again.");
+        } finally {
+            downloadBtn.disabled = false;
+            btnDownloadText.textContent = originalText;
+        }
+    });
+
+    function triggerDirectDownload(url, filename) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    // Modal controls
+    function openLimitModal() {
+        limitModal.style.display = 'flex';
+    }
+    function closeLimitModal() {
+        limitModal.style.display = 'none';
+    }
+
+    btnCloseLimit.addEventListener('click', closeLimitModal);
+    btnDismissLimit.addEventListener('click', closeLimitModal);
+    limitModal.addEventListener('click', (e) => {
+        if (e.target === limitModal) closeLimitModal();
+    });
+
+    // 4. SUBMIT EXTRA DOWNLOAD REQUEST (Duplicates blocked)
+    formRequest.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const reason = requestReasonInput.value.trim();
+        if (!reason) return;
+
+        // Check for duplicate pending requests
+        if (activeRequestStatus === 'pending') {
+            alert("You already have a request pending review. The coordinator will respond shortly.");
+            return;
+        }
+
+        btnSubmitRequest.disabled = true;
+        btnSubmitRequest.textContent = 'Submitting Request...';
+
+        try {
+            const reqRef = doc(db, "downloadRequests", roll);
+            const studentName = (currentStudent && currentStudent.name) || 'Student';
+
+            await setDoc(reqRef, {
+                rollNo: roll,
+                studentName: studentName,
+                reason: reason,
+                status: 'pending',
+                extraDownloads: 1,
+                requestedAt: serverTimestamp(),
+                decidedAt: null,
+                decidedBy: null
+            });
+
+            requestReasonInput.value = '';
+            alert("Your request has been submitted to the admin! You will see the status update here once reviewed.");
+
+        } catch (err) {
+            console.error("Error submitting request:", err);
+            alert(`Could not submit request: ${err.message}`);
+        } finally {
+            btnSubmitRequest.disabled = false;
+        }
+    });
+</script>
+{% endblock %}
